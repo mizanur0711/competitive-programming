@@ -71,27 +71,32 @@ void levelOrderPrint(node*root)
 	return ;
 
 }
-//replace with descendant sum leaving leaf nodes intact
+// creating pair for inc & exc
 
-int replaceWithSum(node *root)
+class Pair {
+public:
+	int inc;
+	int exc;
+};
+
+Pair maxSubsetSum(node *root)
 {
-	//base case
+	Pair p;
+
 	if (root == NULL)
 	{
-		return 0;
+		p.inc = 0;
+		p.exc = 0;
+		return p;
 	}
-	if (root->left == NULL && root->right == NULL )
-	{
-		return root->data;
-	}
+	Pair Left = maxSubsetSum(root->left);
+	Pair Right = maxSubsetSum(root->right);
 
-	//recursive case
-	int LS = replaceWithSum(root->left);
-	int RS = replaceWithSum(root->right);
+	p.inc = root->data + Left.exc + Right.exc;
+	p.exc = max(Left.inc, Left.exc) + max(Right.inc, Right.exc);
 
-	int temp = root->data;
-	root->data = LS + RS;
-	return root->data + temp;
+	return p;
+
 }
 
 int main()
@@ -99,9 +104,13 @@ int main()
 	ios_base::sync_with_stdio(0);
 	cin.tie(0);
 	node*root = buildTree();
+
 	levelOrderPrint(root);
-	replaceWithSum(root);
-	levelOrderPrint(root);
+
+	Pair p = maxSubsetSum(root);
+
+	cout << "Max Sum : " << max(p.inc, p.exc) << endl;
+
 	return 0;
 
 }

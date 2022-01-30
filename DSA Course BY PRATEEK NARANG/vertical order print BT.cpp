@@ -1,6 +1,5 @@
 #include<bits/stdc++.h>
 using namespace std;
-
 class node {
 public:
 	int data;
@@ -37,7 +36,6 @@ void levelOrderPrint(node*root)
 	queue<node*> q;
 	q.push(root);
 	q.push(NULL);
-
 	while (!q.empty())
 	{
 		node* temp = q.front();
@@ -69,39 +67,55 @@ void levelOrderPrint(node*root)
 
 	}
 	return ;
-
 }
-//replace with descendant sum leaving leaf nodes intact
 
-int replaceWithSum(node *root)
+//helper method
+void traverseTree(node *root, int d, map<int, vector<int>> &m)
 {
-	//base case
 	if (root == NULL)
 	{
-		return 0;
+		return;
 	}
-	if (root->left == NULL && root->right == NULL )
-	{
-		return root->data;
+	m[d].push_back(root->data);
+	traverseTree(root->left, d - 1, m);
+	traverseTree(root->right, d + 1, m);
+
+	return;
+
+}
+
+void verticalOrderPrint(node *root)
+{
+	map<int, vector<int> > m;
+
+	int d = 0;
+	traverseTree(root, d, m);
+
+	for (auto p : m) {
+		int key = p.first;
+		vector <int> line = p.second;
+		for (auto data : line) {
+			cout << data << " ";
+		}
+		cout << endl;
 	}
-
-	//recursive case
-	int LS = replaceWithSum(root->left);
-	int RS = replaceWithSum(root->right);
-
-	int temp = root->data;
-	root->data = LS + RS;
-	return root->data + temp;
+	return;
 }
 
 int main()
 {
 	ios_base::sync_with_stdio(0);
 	cin.tie(0);
-	node*root = buildTree();
-	levelOrderPrint(root);
-	replaceWithSum(root);
-	levelOrderPrint(root);
+	node*root = new node(1);
+	root->left = new node(2);
+	root->right = new node(3);
+	root->left->left = new node(4);
+	root->left->right = new node(5);
+	root->right->left = new node(6);
+	root->right->right = new node(7);
+	root->right->left->right = new node(8);
+	root->right->right->right = new node(9);
+	verticalOrderPrint(root);
 	return 0;
 
 }

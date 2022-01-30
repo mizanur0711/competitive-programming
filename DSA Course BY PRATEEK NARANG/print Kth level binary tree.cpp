@@ -1,6 +1,5 @@
 #include<bits/stdc++.h>
 using namespace std;
-
 class node {
 public:
 	int data;
@@ -37,7 +36,6 @@ void levelOrderPrint(node*root)
 	queue<node*> q;
 	q.push(root);
 	q.push(NULL);
-
 	while (!q.empty())
 	{
 		node* temp = q.front();
@@ -69,39 +67,63 @@ void levelOrderPrint(node*root)
 
 	}
 	return ;
-
 }
-//replace with descendant sum leaving leaf nodes intact
 
-int replaceWithSum(node *root)
+void printKthLevel(node *root, int k)
 {
-	//base case
-	if (root == NULL)
+	queue<node*> q;
+	q.push(root);
+	q.push(NULL);
+	while (!q.empty())
 	{
-		return 0;
-	}
-	if (root->left == NULL && root->right == NULL )
-	{
-		return root->data;
-	}
+		node* temp = q.front();
+		if (temp == NULL)
+		{
+			//	cout << endl;
+			q.pop();
+			k--;
+			if (!q.empty())
+			{
+				q.push(NULL);
+			}
+			if (k == -1)
+			{
+				return;
+			}
+		}
+		else
+		{
+			q.pop();
+			if (k == 0)
+			{
+				cout << temp->data << " ";
+			}
 
-	//recursive case
-	int LS = replaceWithSum(root->left);
-	int RS = replaceWithSum(root->right);
+			if (temp->left)
+			{
+				q.push(temp->left);
+			}
 
-	int temp = root->data;
-	root->data = LS + RS;
-	return root->data + temp;
+			if (temp->right)
+			{
+				q.push(temp->right);
+			}
+
+		}
+
+	}
+	return ;
+
 }
-
 int main()
 {
 	ios_base::sync_with_stdio(0);
 	cin.tie(0);
 	node*root = buildTree();
+
 	levelOrderPrint(root);
-	replaceWithSum(root);
-	levelOrderPrint(root);
+	cout << "2nd level is : ";
+	printKthLevel(root, 2);
 	return 0;
 
 }
