@@ -52,6 +52,23 @@ void insertInMiddle(node* &head, int data, int pos) {
 	}
 }
 
+node* inserrtAthead(int val, node* &head)
+{
+	if (head == NULL)
+	{
+		node* n = new node(val);
+		head = n;
+		return head;
+	}
+	else
+	{
+		node* n = new node(val);
+		n->next = head;
+		head = n;
+		return head;
+	}
+}
+
 int main()
 {
 	ios_base::sync_with_stdio(0);
